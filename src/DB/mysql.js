@@ -13,7 +13,31 @@ let conexion;
 function conMysql() {
     conexion = mysql.createConnection(dbconfig);
 
+    conexion.connect((err) => {
+        if (err) {
+            console.log('[db err]', err);
+
+            // Manejo de errores específicos
+            if (err.code === 'ER_ACCESS_DENIED_ERROR') {
+                console.error('Error de autenticación: revisa tus credenciales en config.js.');
+                return;
+            }
+
+            if (err.code === 'ECONNREFUSED') {
+                console.error('No se puede conectar al servidor MySQL. Verifica que el servidor está en ejecución y accesible.');
+                return;
+            }
+
+            // Reconectar solo si es un error no crítico
+            console.warn('Intentando reconectar en 2 segundos...');
+            setTimeout(conMysql, 2000);
+        } else {
+            console.log('¡Conexión a la base de datos establecida exitosamente!');
+        }
+    });
+
     // conexion.connect((err) => {
+        
     //     if (err) {
     //         console.log('[db err]', err);
     //         if (err.code === 'ER_ACCESS_DENIED_ERROR') {
