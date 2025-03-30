@@ -36,7 +36,8 @@ module.exports = function (dbInyectada) {
         } else {
             insertId = body.id;
         }
-        var respuesta2 = ''
+
+        var respuesta2 = '';
         if(body.usuario || body.password){
             respuesta2 = await auth.agregar({
                 id: insertId,
